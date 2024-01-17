@@ -131,6 +131,7 @@ class HBNBCommand(cmd.Cmd):
                     if (new_arg[1]):
                         pass
                     else:
+                        print(new_arg[1])
                         continue
                     new_arg[1] = new_arg[1].replace("_", " ")
                     new_arg[1] = new_arg[1].replace("'", "")
@@ -142,10 +143,9 @@ class HBNBCommand(cmd.Cmd):
                         try:
                             new_arg[1] = float(new_arg[1])
                         except ValueError:
-                            continue
+                            pass
                     kwagrs[new_arg[0]] = new_arg[1]
         new_instance = HBNBCommand.classes[args[0]](**kwagrs)
-        storage.save()
         print(new_instance.id)
         storage.save()
 
