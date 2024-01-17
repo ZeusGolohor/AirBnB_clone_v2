@@ -122,6 +122,14 @@ class HBNBCommand(cmd.Cmd):
             new_arg[1] = new_arg[1].replace("_", " ")
             new_arg[1] = new_arg[1].replace("'", "")
             new_arg[1] = new_arg[1].replace('"', "")
+            # try to convert the value to int or float
+            try:
+                new_arg[1] = int(new_arg[1])
+            except ValueError:
+                try:
+                    new_arg[1] = float(new_arg[1])
+                except ValueError:
+                    pass
             kwagrs[new_arg[0]] = new_arg[1]
         if not args[0]:
             print("** class name missing **")
