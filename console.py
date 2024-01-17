@@ -118,6 +118,8 @@ class HBNBCommand(cmd.Cmd):
         kwagrs = {}
         args = args.split()
         for arg in args[1:]:
+            if '=' not in arg:
+                return
             new_arg = arg.split('=')
             new_arg[1] = new_arg[1].replace("_", " ")
             new_arg[1] = new_arg[1].replace("'", "")
