@@ -143,7 +143,7 @@ class HBNBCommand(cmd.Cmd):
                         new_arg[1] = float(new_arg[1])
                     except ValueError:
                         pass
-            kwagrs[new_arg[0]] = new_arg[1]
+                kwagrs[new_arg[0]] = new_arg[1]
         new_instance = HBNBCommand.classes[args[0]](**kwagrs)
         storage.save()
         print(new_instance.id)
