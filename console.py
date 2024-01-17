@@ -132,7 +132,7 @@ class HBNBCommand(cmd.Cmd):
                         pass
                     else:
                         break
-
+                # checks
                 new_arg[1] = new_arg[1].replace("_", " ")
                 new_arg[1] = new_arg[1].replace("'", '"')
                 new_arg[1] = new_arg[1].replace('"', "")
