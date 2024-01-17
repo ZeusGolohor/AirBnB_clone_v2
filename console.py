@@ -128,9 +128,7 @@ class HBNBCommand(cmd.Cmd):
                 if '=' in arg:
                     # return
                     new_arg = arg.split('=', 1)
-                    if (new_arg[1]):
-                        pass
-                    else:
+                    if (not new_arg[1]):
                         break
                 # checks
                 new_arg[1] = new_arg[1].replace("_", " ")
