@@ -117,32 +117,33 @@ class HBNBCommand(cmd.Cmd):
         """ Create an object of any class"""
         kwagrs = {}
         args = args.split()
-        for arg in args[1:]:
-            if '=' not in arg:
-                return
-            new_arg = arg.split('=')
-            if (new_arg[1]):
-                pass
-            else:
-                continue
-            new_arg[1] = new_arg[1].replace("_", " ")
-            new_arg[1] = new_arg[1].replace("'", "")
-            new_arg[1] = new_arg[1].replace('"', "")
-            # try to convert the value to int or float
-            try:
-                new_arg[1] = int(new_arg[1])
-            except ValueError:
-                try:
-                    new_arg[1] = float(new_arg[1])
-                except ValueError:
-                    pass
-            kwagrs[new_arg[0]] = new_arg[1]
         if not args[0]:
             print("** class name missing **")
             return
         elif args[0] not in HBNBCommand.classes:
             print("** class doesn't exist **")
             return
+        else:
+            for arg in args[1:]:
+                if '=' in arg:
+                    # return
+                    new_arg = arg.split('=', 1)
+                    if (new_arg[1]):
+                        pass
+                    else:
+                        continue
+                    new_arg[1] = new_arg[1].replace("_", " ")
+                    new_arg[1] = new_arg[1].replace("'", "")
+                    new_arg[1] = new_arg[1].replace('"', "")
+                    # try to convert the value to int or float
+                    try:
+                        new_arg[1] = int(new_arg[1])
+                    except ValueError:
+                        try:
+                            new_arg[1] = float(new_arg[1])
+                        except ValueError:
+                            pass
+                    kwagrs[new_arg[0]] = new_arg[1]
         new_instance = HBNBCommand.classes[args[0]](**kwagrs)
         storage.save()
         print(new_instance.id)
