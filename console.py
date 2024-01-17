@@ -121,6 +121,8 @@ class HBNBCommand(cmd.Cmd):
             if '=' not in arg:
                 return
             new_arg = arg.split('=')
+            if (len(new_arg[1]) == 0):
+                continue
             new_arg[1] = new_arg[1].replace("_", " ")
             new_arg[1] = new_arg[1].replace("'", "")
             new_arg[1] = new_arg[1].replace('"', "")
@@ -205,7 +207,7 @@ class HBNBCommand(cmd.Cmd):
         key = c_name + "." + c_id
 
         try:
-            del(storage.all()[key])
+            del (storage.all()[key])
             storage.save()
         except KeyError:
             print("** no instance found **")
