@@ -129,7 +129,7 @@ class HBNBCommand(cmd.Cmd):
                     # return
                     new_arg = arg.split('=', 1)
                     if (not new_arg[1]):
-                        break
+                        continue
                 # checks
                 new_arg[1] = new_arg[1].replace("_", " ")
                 new_arg[1] = new_arg[1].replace("'", '"')
