@@ -10,6 +10,7 @@ class State(BaseModel):
     This class is used to manage the State class
     instances.
     """
+    name = ""
 
     def __init__(self, *args, **kwagrs):
         """
@@ -18,7 +19,8 @@ class State(BaseModel):
         """
         if ("id" not in kwagrs.keys()):
             super().__init__()
-        name = ""
+        if 'name' not in kwagrs:
+            kwagrs['name'] = self.name
         for key, value in kwagrs.items():
             if key != "__class__":
                 if (key == "created_at"):
