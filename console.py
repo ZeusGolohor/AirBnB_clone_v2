@@ -128,10 +128,10 @@ class HBNBCommand(cmd.Cmd):
                 if '=' in arg:
                     # return
                     new_arg = arg.split('=', 1)
-                    if (new_arg[1]):
-                        pass
-                    else:
-                        break
+                    # if (new_arg[1]):
+                    #     pass
+                    # else:
+                    #     break
                     new_arg[1] = new_arg[1].replace("_", " ")
                     new_arg[1] = new_arg[1].replace("'", "")
                     new_arg[1] = new_arg[1].replace('"', "")
