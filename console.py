@@ -131,11 +131,10 @@ class HBNBCommand(cmd.Cmd):
                     if (new_arg[1]):
                         pass
                     else:
-                        break
+                        continue
                 new_arg[1] = new_arg[1].replace("_", " ")
                 new_arg[1] = new_arg[1].replace("'", '"')
                 new_arg[1] = new_arg[1].replace('"', "")
-
                 # try to convert the value to int or float
                 try:
                     new_arg[1] = int(new_arg[1])
