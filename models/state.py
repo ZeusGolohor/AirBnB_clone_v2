@@ -1,16 +1,21 @@
 #!/usr/bin/python3
 """ State Module for HBNB project """
-from models.base_model import BaseModel
+from models.base_model import BaseModel, Base
 from models import storage
 from datetime import datetime
+from sqlalchemy import Column, Integer, String, MetaData, DateTime
+from sqlalchemy.orm import relationship
 
 
-class State(BaseModel):
+class State(BaseModel, Base):
     """
     This class is used to manage the State class
     instances.
     """
     name = ""
+    __tablename__ = "states"
+    name = Column(String(128), nullable=False)
+    state = relationship("Place", backref="cities")
 
     def __init__(self, *args, **kwagrs):
         """
