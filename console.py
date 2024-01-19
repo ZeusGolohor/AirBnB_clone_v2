@@ -30,6 +30,7 @@ class HBNBCommand(cmd.Cmd):
         'max_guest': int, 'price_by_night': int,
         'latitude': float, 'longitude': float
     }
+    storage.reload()
 
     def preloop(self):
         """Prints if isatty is false"""
@@ -223,7 +224,8 @@ class HBNBCommand(cmd.Cmd):
                     pass
                 except sqlalchemy.exc.IntegrityError:
                     print(
-                        "** instance can't be deleted because it's mapped to a class. **")
+                        "** instance can't be deleted because\
+                             it's mapped to a class. **")
         else:
             key = c_name + "." + c_id
 
@@ -241,7 +243,7 @@ class HBNBCommand(cmd.Cmd):
     def do_all(self, args):
         """ Shows all objects, or all objects of a class"""
         # used to prepare the database
-        storage.reload()
+        # storage.reload()
         print_list = []
         # check for the database in use
         if (storage.HBNB_TYPE_STORAGE == "db"):
