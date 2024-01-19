@@ -2,6 +2,7 @@
 """ Console Module """
 import cmd
 import sys
+import sqlalchemy
 from models.base_model import BaseModel
 from models.__init__ import storage
 from models.user import User
@@ -144,9 +145,10 @@ class HBNBCommand(cmd.Cmd):
                         pass
                 kwagrs[new_arg[0]] = new_arg[1]
             new_instance = HBNBCommand.classes[args[0]](**kwagrs)
-            storage.save()
+            new_instance.save()
+            # storage.save()
             print(new_instance.id)
-            storage.save()
+            # storage.save()
 
     def help_create(self):
         """ Help information for the create method """
@@ -206,13 +208,30 @@ class HBNBCommand(cmd.Cmd):
             print("** instance id missing **")
             return
 
-        key = c_name + "." + c_id
+        # check for the database in use
+        if (storage.HBNB_TYPE_STORAGE == "db"):
+            if c_name in HBNBCommand.classes:
+                try:
+                    query1 = storage._DBStorage__session.query(
+                        self.classes[c_name]).filter_by(id=c_id).first()
+                    if (query1 is None):
+                        print("** instance not found **")
+                        return
+                    storage.delete(query1)
 
-        try:
-            del (storage.all()[key])
-            storage.save()
-        except KeyError:
-            print("** no instance found **")
+                except sqlalchemy.exc.InvalidRequestError:
+                    pass
+                except sqlalchemy.exc.IntegrityError:
+                    print(
+                        "** instance can't be deleted because it's mapped to a class. **")
+        else:
+            key = c_name + "." + c_id
+
+            try:
+                del (storage.all()[key])
+                storage.save()
+            except KeyError:
+                print("** no instance found **")
 
     def help_destroy(self):
         """ Help information for the destroy command """
@@ -221,19 +240,48 @@ class HBNBCommand(cmd.Cmd):
 
     def do_all(self, args):
         """ Shows all objects, or all objects of a class"""
+        # used to prepare the database
+        storage.reload()
         print_list = []
-
-        if args:
-            args = args.split(' ')[0]  # remove possible trailing args
-            if args not in HBNBCommand.classes:
-                print("** class doesn't exist **")
-                return
-            for k, v in storage._FileStorage__objects.items():
-                if k.split('.')[0] == args:
-                    print_list.append(str(v))
+        # check for the database in use
+        if (storage.HBNB_TYPE_STORAGE == "db"):
+            if args:
+                args = args.split(' ')[0]  # remove possible trailing args
+                if args not in HBNBCommand.classes:
+                    print("** class doesn't exist **")
+                    return
+                # quering DB via args
+                try:
+                    results = storage._DBStorage__session.query(
+                        self.classes[args]).all()
+                    for result in results:
+                        del result._sa_instance_state
+                        print_list.append(result)
+                except sqlalchemy.exc.InvalidRequestError:
+                    pass
+            else:
+                # print("select all from the database")
+                for key, value in self.classes.items():
+                    try:
+                        results = storage._DBStorage__session.query(
+                            value).all()
+                        for result in results:
+                            del result._sa_instance_state
+                            print_list.append(result)
+                    except sqlalchemy.exc.InvalidRequestError:
+                        pass
         else:
-            for k, v in storage._FileStorage__objects.items():
-                print_list.append(str(v))
+            if args:
+                args = args.split(' ')[0]  # remove possible trailing args
+                if args not in HBNBCommand.classes:
+                    print("** class doesn't exist **")
+                    return
+                for k, v in storage._FileStorage__objects.items():
+                    if k.split('.')[0] == args:
+                        print_list.append(str(v))
+            else:
+                for k, v in storage._FileStorage__objects.items():
+                    print_list.append(str(v))
 
         print(print_list)
 

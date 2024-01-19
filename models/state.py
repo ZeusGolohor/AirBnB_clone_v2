@@ -15,7 +15,7 @@ class State(BaseModel, Base):
     name = ""
     __tablename__ = "states"
     name = Column(String(128), nullable=False)
-    state = relationship("Place", backref="cities")
+    cities = relationship("City", backref="cities")
 
     def __init__(self, *args, **kwagrs):
         """
@@ -24,8 +24,8 @@ class State(BaseModel, Base):
         """
         if ("id" not in kwagrs.keys()):
             super().__init__()
-        if 'name' not in kwagrs:
-            kwagrs['name'] = self.name
+        if ("_sa_instance_state" in kwagrs):
+            del kwagrs["_sa_instance_state"]
         for key, value in kwagrs.items():
             if key != "__class__":
                 if (key == "created_at"):

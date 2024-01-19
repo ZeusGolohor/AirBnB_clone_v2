@@ -1,18 +1,20 @@
 #!/usr/bin/python3
 """ City Module for HBNB project """
-from models.base_model import BaseModel, Base
 from models import storage
 from datetime import datetime
 from sqlalchemy import Column, String, ForeignKey
+from sqlalchemy.orm import relationship
+from models.base_model import BaseModel, Base
 
 
 class City(BaseModel, Base):
     """ The city class, contains state ID and name """
     state_id = ""
     name = ""
-    __table__ = 'cities'
+    __tablename__ = 'cities'
     name = Column(String(128), nullable=False)
     state_id = Column(String(60), ForeignKey('states.id'), nullable=False)
+    state = relationship("State", backref="states")
 
     def __init__(self, *args, **kwagrs):
         """
@@ -21,11 +23,8 @@ class City(BaseModel, Base):
         """
         if ("id" not in kwagrs.keys()):
             super().__init__()
-        # check if default values should be used
-        if 'state_id' not in kwagrs:
-            kwagrs['state_id'] = self.state_id
-        if 'name' not in kwagrs:
-            kwagrs['name'] = self.name
+        if ("_sa_instance_state" in kwagrs):
+            del kwagrs["_sa_instance_state"]
         for key, value in kwagrs.items():
             if key != "__class__":
                 if (key == "created_at"):
