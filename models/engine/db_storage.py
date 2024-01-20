@@ -26,6 +26,7 @@ class DBStorage():
             ("hbnb_dev", "hbnb_dev_pwd", "hbnb_dev_db"), pool_pre_ping=True)
         if (self.HBNB_ENV == 'test'):
             Base.metadata.drop_all(self.__engine)
+        # self.reload()
 
     def all(self, cls=None):
         from models.base_model import BaseModel
@@ -41,8 +42,33 @@ class DBStorage():
             'State': State, 'City': City, 'Amenity': Amenity,
             'Review': Review
         }
+        # self.reload()
         results = {}
-        self.reload()
+        if cls is not None:
+            # query1 = self.__session.query(cls).all()
+            # for key in query1:
+            #     results["{}.{}".format(
+            #             key, query.id)] = query.to_dict()
+            for key, value in classes.items():
+                if (key == "Place"):
+                    query1 = self.__session.query(classes[key]).all()
+                    for query in query1:
+                        results["{}.{}".format(
+                                key, query.id)] = query
+                        # print(results)
+
+        else:
+            print("all db")
+            for key, value in classes.items():
+                if key != 'BaseModel':
+                    query1 = self.__session.query(classes[key]).all()
+                    for query in query1:
+                        results["{}.{}".format(
+                                key, query.id)] = query
+        # print("working")
+        # return ({"work": "ing"})
+        return (results)
+        # self.reload()
         # check if we should print all or just one class
         if (cls is not None):
             for key, value in classes.items():
