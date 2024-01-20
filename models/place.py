@@ -4,6 +4,7 @@ from models.base_model import BaseModel, Base
 from models import storage
 from datetime import datetime
 from sqlalchemy import Column, Integer, String, ForeignKey, Float
+from sqlalchemy.orm import relationship
 
 
 class Place(BaseModel, Base):
@@ -31,6 +32,8 @@ class Place(BaseModel, Base):
     price_by_night = Column(Integer, nullable=False, default=0)
     latitude = Column(Float, nullable=True)
     longitude = Column(Float, nullable=True)
+    reviews = relationship("Review", backref="place",
+                           cascade='all, delete-orphan')
 
     def __init__(self, *args, **kwagrs):
         """

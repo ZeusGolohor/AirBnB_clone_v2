@@ -18,8 +18,10 @@ class User(BaseModel, Base):
     password = Column(String(128), nullable=False)
     first_name = Column(String(128), nullable=True)
     last_name = Column(String(128), nullable=True)
-    places = relationship("Place", backref="user",
+    places = relationship("Place", backref="users",
                           cascade='all, delete-orphan')
+    reviews = relationship("Review", backref="reviews",
+                           cascade='all, delete-orphan')
 
     def __init__(self, *args, **kwagrs):
         """
@@ -28,11 +30,6 @@ class User(BaseModel, Base):
         """
         if ("id" not in kwagrs.keys()):
             super().__init__()
-        # check if default values should be used
-        # if 'first_name' not in kwagrs.keys():
-            # kwagrs['first_name'] = None
-        # if 'last_name' not in kwagrs.keys():
-            # kwagrs['last_name'] = None
         for key, value in kwagrs.items():
             if key != "__class__":
                 if (key == "created_at"):
