@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """ Console Module """
 import cmd
+import os
 import sys
 import sqlalchemy
 from models.base_model import BaseModel
@@ -213,7 +214,7 @@ class HBNBCommand(cmd.Cmd):
             return
 
         # check for the database in use
-        if (storage.HBNB_TYPE_STORAGE == "db"):
+        if (os.getenv("HBNB_TYPE_STORAGE", "FileStorage") == "db"):
             if c_name in HBNBCommand.classes:
                 try:
                     query1 = storage._DBStorage__session.query(
@@ -249,7 +250,7 @@ class HBNBCommand(cmd.Cmd):
         # storage.reload()
         print_list = []
         # check for the database in use
-        if (storage.HBNB_TYPE_STORAGE == "db"):
+        if (os.getenv("HBNB_TYPE_STORAGE", "FileStorage") == "db"):
             if args:
                 args = args.split(' ')[0]  # remove possible trailing args
                 if args not in HBNBCommand.classes:

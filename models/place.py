@@ -3,7 +3,7 @@
 from models.base_model import BaseModel, Base
 from models import storage
 from datetime import datetime
-from sqlalchemy import Column, Integer, String, ForeignKey, Float
+from sqlalchemy import Column, Integer, String, ForeignKey, Float, Table
 from sqlalchemy.orm import relationship
 
 
@@ -52,3 +52,15 @@ class Place(BaseModel, Base):
                     setattr(self, key, value)
         if ("id" not in kwagrs.keys()):
             storage.new(self)
+
+    # # For FileStorage
+    # @property
+    # def amenities(self):
+    #     return [amenity_id for amenity_id in self.amenity_ids]
+
+    # @amenities.setter
+    # def amenities(self, amenity):
+    #     if isinstance(amenity, Amenity):
+    #         self.amenity_ids.append(amenity.id)
+    #     else:
+    #         pass  # Handle appropriately if needed

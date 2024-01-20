@@ -1,12 +1,27 @@
 #!/usr/bin/python3
 """ State Module for HBNB project """
-from models.base_model import BaseModel
+from models.base_model import BaseModel, Base
 from models import storage
 from datetime import datetime
+from sqlalchemy import Column, String, ForeignKey, Table
+from sqlalchemy.orm import relationship
 
 
-class Amenity(BaseModel):
+class Amenity(BaseModel, Base):
     name = ""
+
+    # defining a relationship btn place and amenities
+    place_amenity = Table("place_amenity", Base.metadata,
+                          Column("place_id", String(60), ForeignKey(
+                              "places.id"), primary_key=True, nullable=False),
+                          Column("amenity_id", String(60), ForeignKey(
+                              "amenities.id"), primary_key=True, nullable=False)
+                          )
+
+    __tablename__ = "amenities"
+    name = Column(String(128), nullable=False)
+    place_amenities = relationship(
+        "Place", secondary=place_amenity, viewonly=False, backref="amenities")
 
     def __init__(self, *args, **kwagrs):
         """
@@ -15,9 +30,6 @@ class Amenity(BaseModel):
         """
         if ("id" not in kwagrs.keys()):
             super().__init__()
-        # check if default values should be used
-        if 'name' not in kwagrs:
-            kwagrs['name'] = self.name
         for key, value in kwagrs.items():
             if key != "__class__":
                 if (key == "created_at"):

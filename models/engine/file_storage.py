@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """This module defines a class to manage file storage for hbnb clone"""
 import json
+import os
 
 
 class FileStorage:
@@ -50,7 +51,9 @@ class FileStorage:
             json.dump(temp, f)
 
     def reload(self):
+        print("reloading")
         """Loads storage dictionary from file"""
+
         from models.base_model import BaseModel
         from models.user import User
         from models.place import Place
