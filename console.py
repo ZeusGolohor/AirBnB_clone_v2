@@ -146,10 +146,12 @@ class HBNBCommand(cmd.Cmd):
                         pass
                 kwagrs[new_arg[0]] = new_arg[1]
             new_instance = HBNBCommand.classes[args[0]](**kwagrs)
-            new_instance.save()
-            # storage.save()
-            print(new_instance.id)
-            # storage.save()
+            try:
+                new_instance.save()
+                print(new_instance.id)
+            except sqlalchemy.exc.IntegrityError:
+                # if any error was found adding data to the database
+                pass
 
     def help_create(self):
         """ Help information for the create method """
