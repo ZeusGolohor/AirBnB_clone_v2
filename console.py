@@ -149,8 +149,9 @@ class HBNBCommand(cmd.Cmd):
             try:
                 new_instance.save()
                 print(new_instance.id)
-            except sqlalchemy.exc.IntegrityError:
+            except sqlalchemy.exc.IntegrityError as E:
                 # if any error was found adding data to the database
+                print(E)
                 pass
 
     def help_create(self):

@@ -16,8 +16,8 @@ class User(BaseModel, Base):
     __tablename__ = 'users'
     email = Column(String(128), nullable=False)
     password = Column(String(128), nullable=False)
-    first_name = Column(String(128), nullable=False)
-    last_name = Column(String(128), nullable=False)
+    first_name = Column(String(128), nullable=True)
+    last_name = Column(String(128), nullable=True)
     places = relationship("Place", backref="user",
                           cascade='all, delete-orphan')
 
@@ -29,14 +29,10 @@ class User(BaseModel, Base):
         if ("id" not in kwagrs.keys()):
             super().__init__()
         # check if default values should be used
-        if 'email' not in kwagrs:
-            kwagrs['email'] = self.email
-        if 'password' not in kwagrs:
-            kwagrs['password'] = self.password
-        if 'first_name' not in kwagrs:
-            kwagrs['first_name'] = self.first_name
-        if 'last_name' not in kwagrs:
-            kwagrs['last_name'] = self.last_name
+        # if 'first_name' not in kwagrs.keys():
+            # kwagrs['first_name'] = None
+        # if 'last_name' not in kwagrs.keys():
+            # kwagrs['last_name'] = None
         for key, value in kwagrs.items():
             if key != "__class__":
                 if (key == "created_at"):
