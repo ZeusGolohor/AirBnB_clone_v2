@@ -51,7 +51,6 @@ class FileStorage:
             json.dump(temp, f)
 
     def reload(self):
-        print("reloading")
         """Loads storage dictionary from file"""
 
         from models.base_model import BaseModel

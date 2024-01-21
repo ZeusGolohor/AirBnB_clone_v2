@@ -116,44 +116,69 @@ class HBNBCommand(cmd.Cmd):
         """ Overrides the emptyline method of CMD """
         pass
 
+    def check_class(self, line):
+        """
+        A ethod used to check if a class name exist
+        or is missing.
+        """
+        line = line.split()
+        if (len(line) >= 1):
+            if (line[0] in self.classes):
+                return (True)
+            else:
+                print("** class doesn't exist **")
+        else:
+            print("** class name missing **")
+        return (False)
+
     def do_create(self, args):
         """ Create an object of any class"""
-        kwagrs = {}
-        args = args.split()
-        if not args[0]:
-            print("** class name missing **")
-            return
-        elif args[0] not in HBNBCommand.classes:
-            print("** class doesn't exist **")
-            return
+        # check for the database in use
+        if (os.getenv("HBNB_TYPE_STORAGE", "FileStorage") != "db"):
+            line = args
+            if (self.check_class(line) is True):
+                line = line.split()
+                className = self.classes[line[0]]
+                instance = className()
+                instance.save()
+                print(instance.id)
         else:
-            for arg in args[1:]:
-                if '=' in arg:
-                    # return
-                    new_arg = arg.split('=', 1)
-                    if (not new_arg[1]):
-                        continue
-                # checks
-                new_arg[1] = new_arg[1].replace("_", " ")
-                new_arg[1] = new_arg[1].replace("'", '"')
-                new_arg[1] = new_arg[1].replace('"', "")
-                # try to convert the value to int or float
-                try:
-                    new_arg[1] = int(new_arg[1])
-                except ValueError:
+            kwagrs = {}
+            args = args.split()
+            if not args[0]:
+                print("** class name missing **")
+                return
+            elif args[0] not in HBNBCommand.classes:
+                print("** class doesn't exist **")
+                return
+            else:
+                for arg in args[1:]:
+                    if '=' in arg:
+                        # return
+                        new_arg = arg.split('=', 1)
+                        if (not new_arg[1]):
+                            continue
+                    # checks
+                    new_arg[1] = new_arg[1].replace("_", " ")
+                    new_arg[1] = new_arg[1].replace("'", '"')
+                    new_arg[1] = new_arg[1].replace('"', "")
+                    # try to convert the value to int or float
                     try:
-                        new_arg[1] = float(new_arg[1])
+                        new_arg[1] = int(new_arg[1])
                     except ValueError:
-                        pass
-                kwagrs[new_arg[0]] = new_arg[1]
-            new_instance = HBNBCommand.classes[args[0]](**kwagrs)
-            try:
-                new_instance.save()
-                print(new_instance.id)
-            except sqlalchemy.exc.IntegrityError as E:
-                # if any error was found adding data to the database
-                print(E)
-                pass
+                        try:
+                            new_arg[1] = float(new_arg[1])
+                        except ValueError:
+                            pass
+                    kwagrs[new_arg[0]] = new_arg[1]
+                new_instance = HBNBCommand.classes[args[0]](**kwagrs)
+                try:
+                    new_instance.save()
+                    print(new_instance.id)
+                except sqlalchemy.exc.IntegrityError as E:
+                    # if any error was found adding data to the database
+                    print(E)
+                    pass
 
     def help_create(self):
         """ Help information for the create method """
@@ -284,9 +309,11 @@ class HBNBCommand(cmd.Cmd):
                     return
                 for k, v in storage._FileStorage__objects.items():
                     if k.split('.')[0] == args:
+                        del v._sa_instance_state
                         print_list.append(str(v))
             else:
                 for k, v in storage._FileStorage__objects.items():
+                    del v._sa_instance_state
                     print_list.append(str(v))
 
         print(print_list)

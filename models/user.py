@@ -37,6 +37,8 @@ class User(BaseModel, Base):
                     self.created_at = datetime.fromisoformat(value)
                 elif (key == "updated_at"):
                     self.updated_at = datetime.fromisoformat(value)
+                elif (key == "_sa_instance_state"):
+                    del kwagrs["_sa_instance_state"]
                 else:
                     setattr(self, key, value)
         if ("id" not in kwagrs.keys()):

@@ -5,7 +5,7 @@
 import os
 
 
-HBNB_TYPE_STORAGE = os.getenv("HBNB_TYPE_STORAGE")
+HBNB_TYPE_STORAGE = os.getenv("HBNB_TYPE_STORAGE", "FileStorage")
 # storage = DBStorage()
 # storage.reload()
 
