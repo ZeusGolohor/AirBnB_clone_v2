@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """This module defines a class User"""
 from models.base_model import BaseModel, Base
+from models.review import Review
 from models import storage
 from datetime import datetime
 from sqlalchemy import Column, String
@@ -20,7 +21,7 @@ class User(BaseModel, Base):
     last_name = Column(String(128), nullable=True)
     places = relationship("Place", backref="users",
                           cascade='all, delete-orphan')
-    reviews = relationship("Review", backref="reviews",
+    reviews = relationship(Review, backref="user",
                            cascade='all, delete-orphan')
 
     def __init__(self, *args, **kwagrs):
