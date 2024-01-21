@@ -209,6 +209,7 @@ class HBNBCommand(cmd.Cmd):
 
         key = c_name + "." + c_id
         try:
+            del storage._FileStorage__objects[key]._sa_instance_state
             print(storage._FileStorage__objects[key])
         except KeyError:
             print("** no instance found **")
