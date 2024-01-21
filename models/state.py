@@ -4,6 +4,7 @@ from models.base_model import BaseModel, Base
 from datetime import datetime
 from sqlalchemy import Column, Integer, String, MetaData, DateTime
 from sqlalchemy.orm import relationship
+import os
 
 
 class State(BaseModel, Base):
@@ -37,4 +38,8 @@ class State(BaseModel, Base):
                 else:
                     setattr(self, key, value)
         if ("id" not in kwagrs.keys()):
+            # check for the database in use
+            # if (os.getenv("HBNB_TYPE_STORAGE", "FileStorage") != "db"):
+            # if ("name" not in kwagrs.keys()):
+            #     kwagrs["name"] = ""
             storage.new(self)
