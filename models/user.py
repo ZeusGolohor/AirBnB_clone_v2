@@ -2,7 +2,6 @@
 """This module defines a class User"""
 from models.base_model import BaseModel, Base
 from models.review import Review
-from models import storage
 from datetime import datetime
 from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship
@@ -29,6 +28,8 @@ class User(BaseModel, Base):
         This method is called wherever this class gets
         instanciated.
         """
+        from models import storage
+
         if ("id" not in kwagrs.keys()):
             super().__init__()
         for key, value in kwagrs.items():

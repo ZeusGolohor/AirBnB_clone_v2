@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 """ City Module for HBNB project """
-from models import storage
 from datetime import datetime
 from sqlalchemy import Column, String, ForeignKey
 from sqlalchemy.orm import relationship
@@ -23,6 +22,8 @@ class City(BaseModel, Base):
         This method is called wherever this class gets
         instanciated.
         """
+        from models import storage
+
         if ("id" not in kwagrs.keys()):
             super().__init__()
         if ("_sa_instance_state" in kwagrs):

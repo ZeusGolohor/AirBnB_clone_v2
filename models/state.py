@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 """ State Module for HBNB project """
 from models.base_model import BaseModel, Base
-from models import storage
 from datetime import datetime
 from sqlalchemy import Column, Integer, String, MetaData, DateTime
 from sqlalchemy.orm import relationship
@@ -23,6 +22,8 @@ class State(BaseModel, Base):
         This method is called wherever this class gets
         instanciated.
         """
+        from models import storage
+
         if ("id" not in kwagrs.keys()):
             super().__init__()
         if ("_sa_instance_state" in kwagrs):

@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 """ State Module for HBNB project """
 from models.base_model import BaseModel, Base
-from models import storage
 from datetime import datetime
 from sqlalchemy import Column, String, ForeignKey, Table
 from sqlalchemy.orm import relationship
@@ -37,6 +36,8 @@ class Amenity(BaseModel, Base):
         This method is called wherever this class gets
         instanciated.
         """
+        from models import storage
+
         if ("id" not in kwagrs.keys()):
             super().__init__()
         for key, value in kwagrs.items():
