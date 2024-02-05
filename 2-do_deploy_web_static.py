@@ -34,6 +34,6 @@ def do_deploy(archive_path):
             run('ln -s {} /data/web_static/current'.format(store))
             return (True)
         except Exception:
-            retrun (False)
+            return(False)
     else:
         return (False)
