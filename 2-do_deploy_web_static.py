@@ -1,9 +1,8 @@
 #!/usr/bin/python3
 """
-Scrit used to Deploy archive!
+Script used to deploy an archive.
 """
 import os
-# First we import the Fabric api
 from fabric.api import *
 
 env.hosts = ['35.175.135.174', '18.234.169.222']
@@ -11,26 +10,50 @@ env.hosts = ['35.175.135.174', '18.234.169.222']
 
 def do_deploy(archive_path):
     """
-    Write a Fabric script (based on the file
-    1-pack_web_static.py) that distributes an archive
-     to your web servers, using the function
+    Distributes an archive to web servers.
+
+    :param archive_path: Path to the archive file.
+    :return: True if all operations are done correctly, False otherwise.
     """
-    if (os.path.exists(archive_path)):
-        f_name = archive_path.split('/')[-1]
-        name = f_name.split('.')[0]
-        store = '/data/web_static/releases/{}'.format(name)
-        rf_path = '/tmp/{}'.format(f_name)
-        l1 = '/data/web_static/current/web_static/*'
-        l2 = '/data/web_static/current'
+    if not os.path.exists(archive_path):
+        print(f"Error: Archive not found at {archive_path}")
+        return False
+
+    try:
+        # Extract necessary information from the archive_path
+        archive_name = os.path.basename(archive_path)
+        archive_no_ext = os.path.splitext(archive_name)[0]
+
+        # Define paths for deployment
+        store_path = '/data/web_static/releases/{}'.format(archive_no_ext)
+        remote_archive_path = '/tmp/{}'.format(archive_name)
+
+        # Create necessary directories
+        run('mkdir -p {}'.format(store_path))
         run('mkdir -p /tmp')
-        run('mkdir -p {}'.format(store))
+
+        # Upload the archive to /tmp/ directory on the web server
         put(archive_path, '/tmp')
-        run('tar -xzvf {} -C {}'.format(rf_path, store))
-        run('rm -rf /tmp/{}'.format(f_name))
+
+        # Uncompress the archive to the specified folder
+        run('tar -xzvf {} -C {}'.format(remote_archive_path, store_path))
+
+        # Remove the uploaded archive from /tmp/
+        run('rm -rf {}'.format(remote_archive_path))
+
+        # Remove the existing symbolic link
         run('rm -rf /data/web_static/current')
-        run('ln -s {} /data/web_static/current'.format(store))
-        run('rsync -av --remove-source-files {} {}'.format(l1, l2))
-        run('rm -rf /data/web_static/current/web_static')
-        return (True)
-    else:
-        return (False)
+
+        # Create a new symbolic link
+        run('ln -s {} /data/web_static/current'.format(store_path))
+
+        # Sync contents and remove source files
+        run('rsync -av --remove-source-files {}/web_static/ \
+        /data/web_static/current/'.format(store_path))
+
+        print("Deployment successful!")
+        return True
+
+    except Exception as e:
+        print(f"Error during deployment: {e}")
+        return False
