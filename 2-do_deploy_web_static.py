@@ -10,6 +10,11 @@ env.hosts = ['35.175.135.174', '18.234.169.222']
 
 
 def do_deploy(archive_path):
+    """
+    Write a Fabric script (based on the file 
+    1-pack_web_static.py) that distributes an archive
+     to your web servers, using the function
+    """
     if (os.path.exists(archive_path)):
         f_name = archive_path.split('/')[-1]
         name = f_name.split('.')[0]
