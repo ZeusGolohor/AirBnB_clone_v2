@@ -16,6 +16,5 @@ def do_clean(number=0):
         local('ls -t /versions | tail -n +2 | xargs rm -rf')
         run('ls -t /data/web_static/releases | tail -n +2 | xargs rm -rf')
     elif (number == '2'):
-        print("working")
         local('ls -t /versions | tail -n +3 | xargs rm -rf')
         run('ls -t /data/web_static/releases | tail -n +3 | xargs rm -rf')
