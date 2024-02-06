@@ -28,11 +28,11 @@ def do_deploy(archive_path):
             put(archive_path, '/tmp')
             run('tar -xzvf {} -C {}'.format(rf_path, store))
             run('rm -rf /tmp/{}'.format(f_name))
-            # run('rsync -av --remove-source-files {} {}'.format(l1, l2)
-            run('cp -r {}/web_static/* {}'.format(store, store))
-            run('rm -rf {}/web_static'.format(store))
             run('rm -rf /data/web_static/current')
             run('ln -s {} /data/web_static/current'.format(store))
+            run('rsync -av --remove-source-files {}/web_static/* {}'
+                .format(store, store))
+            run('rm -rf {}/web_static'.format(store))
             return (True)
         except Exception:
             return(False)
