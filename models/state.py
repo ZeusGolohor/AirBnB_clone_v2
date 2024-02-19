@@ -43,3 +43,25 @@ class State(BaseModel, Base):
             # if ("name" not in kwagrs.keys()):
             #     kwagrs["name"] = ""
             storage.new(self)
+
+    @property
+    def cities(self):
+        """
+        Method to return the list of City objects from
+        storage linked to the current State.
+        """
+        from models.__init__ import storage
+        from models.city import City
+        cities = []
+        # Get all states.cities in the file storage.
+        for id, value in storage._FileStorage__objects.items():
+            if (value.__class__ == City):
+                if (value.state_id == self.id):
+                    del value._sa_instance_state
+                    try:
+                        del self._sa_instance_state
+                    except Exception:
+                        pass
+                    cities.append(value)
+            # exit(1)
+        return (cities)

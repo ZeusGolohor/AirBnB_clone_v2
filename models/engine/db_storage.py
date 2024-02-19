@@ -50,7 +50,7 @@ class DBStorage():
             #     results["{}.{}".format(
             #             key, query.id)] = query.to_dict()
             for key, value in classes.items():
-                if (key == "Place"):
+                if (value is cls):
                     query1 = self.__session.query(classes[key]).all()
                     for query in query1:
                         results["{}.{}".format(
@@ -58,37 +58,13 @@ class DBStorage():
                         # print(results)
 
         else:
-            print("all db")
+            # print("all db")
             for key, value in classes.items():
                 if key != 'BaseModel':
                     query1 = self.__session.query(classes[key]).all()
                     for query in query1:
                         results["{}.{}".format(
                                 key, query.id)] = query
-        # print("working")
-        # return ({"work": "ing"})
-        return (results)
-        # self.reload()
-        # check if we should print all or just one class
-        if (cls is not None):
-            for key, value in classes.items():
-                if value is cls:
-                    try:
-                        query1 = self.__session.query(value).all()
-                        for query in query1:
-                            results["{}.{}".format(
-                                key, query.id)] = query.to_dict()
-                    except sqlalchemy.exc.InvalidRequestError:
-                        pass
-        else:
-            for key, value in classes.items():
-                try:
-                    query1 = self.__session.query(value).all()
-                    for query in query1:
-                        results["{}.{}".format(
-                                key, query.id)] = query.to_dict()
-                except sqlalchemy.exc.InvalidRequestError:
-                    pass
         return (results)
 
     def new(self, obj):
@@ -106,3 +82,11 @@ class DBStorage():
         Base.metadata.create_all(self.__engine)
         Session = sessionmaker(bind=self.__engine, expire_on_commit=False)
         self.__session = scoped_session(Session)
+
+    def close(self):
+        """
+        method to call remove() method on the private session attribute.
+        normal: the SQLAlchemy didn't reload his `Session`
+        to force it, you must remove the current session to create a new one:
+        """
+        self.__session.remove()
