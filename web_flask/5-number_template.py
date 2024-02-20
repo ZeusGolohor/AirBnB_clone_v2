@@ -59,7 +59,7 @@ def num_temp(n):
         n = int(n)
         return render_template('5-number.html', n=n)
     except Exception:
-        pass
+        return render_template('404.html'), 404
 
 
 if __name__ == "__main__":
