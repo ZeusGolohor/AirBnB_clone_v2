@@ -5,7 +5,7 @@ A script that starts a Flask web application
 
 from flask import Flask
 from flask import render_template
-from models.__init__ import storage
+from models import storage
 from models.state import State
 
 app = Flask(__name__)
@@ -75,10 +75,19 @@ def even_odd(n):
 
 @app.route('/states_list', strict_slashes=False)
 def states_list():
-    states = storage._DBStorage__session.query(State).order_by(State.name).all()
+    states = storage.all(State).values()
+    sorted_states = sorted(states, key=lambda state: state.name)
     for state in states:
         del state._sa_instance_state
     return render_template('7-states_list.html', states=states)
+
+
+@app.teardown_appcontext
+def teardown_ses(self):
+    """
+    A method to tear down a sesssion.
+    """
+    storage.close()
 
 
 if __name__ == "__main__":

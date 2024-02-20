@@ -89,4 +89,4 @@ class DBStorage():
         normal: the SQLAlchemy didn't reload his `Session`
         to force it, you must remove the current session to create a new one:
         """
-        self.__session.remove()
+        self.__session.close()
