@@ -33,7 +33,7 @@ def c(text):
     return f"C {pro}"
 
 
-@app.route('/python')
+@app.route('/python/')
 @app.route('/python/<text>', strict_slashes=False)
 def pyt(text='is cool'):
     """
