@@ -68,7 +68,7 @@ def even_odd(n):
         n = int(n)
         return render_template('6-number_odd_or_even.html', n=n)
     except Exception:
-        pass
+        return render_template('404.html'), 404
 
 
 if __name__ == "__main__":
