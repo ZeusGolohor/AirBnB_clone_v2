@@ -40,7 +40,7 @@ def pyt(text='is cool'):
     Defines the python route.
     """
     pro_text = text.replace('_', ' ')
-    return f"Python {text}"
+    return f"Python {pro_text}"
 
 
 if __name__ == "__main__":
