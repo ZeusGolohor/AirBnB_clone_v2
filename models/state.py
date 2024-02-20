@@ -63,5 +63,4 @@ class State(BaseModel, Base):
                     except Exception:
                         pass
                     cities.append(value)
-            # exit(1)
         return (cities)

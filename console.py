@@ -295,11 +295,12 @@ class HBNBCommand(cmd.Cmd):
                 # print("select all from the database")
                 for key, value in self.classes.items():
                     try:
-                        results = storage._DBStorage__session.query(
-                            value).all()
-                        for result in results:
-                            del result._sa_instance_state
-                            print_list.append(result)
+                        if key != 'BaseModel':
+                            results = storage._DBStorage__session.query(
+                                value).all()
+                            for result in results:
+                                del result._sa_instance_state
+                                print_list.append(result)
                     except sqlalchemy.exc.InvalidRequestError:
                         pass
         else:
