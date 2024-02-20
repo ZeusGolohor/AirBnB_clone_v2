@@ -3,7 +3,7 @@
 A script that starts a Flask web application
 """
 
-from flask import Flask
+from flask import Flask, render_template
 
 app = Flask(__name__)
 
@@ -47,9 +47,9 @@ def pyt(text='is cool'):
 def num(n):
     try:
         n = int(n)
-        return f'{n}'
+        return f'{n} is a number'
     except Exception:
-        pass
+        return render_template('404.html'), 404
 
 
 if __name__ == "__main__":
