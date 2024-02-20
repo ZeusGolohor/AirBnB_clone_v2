@@ -52,15 +52,28 @@ class State(BaseModel, Base):
         """
         from models.__init__ import storage
         from models.city import City
-        cities = []
-        # Get all states.cities in the file storage.
-        for id, value in storage._FileStorage__objects.items():
-            if (value.__class__ == City):
-                if (value.state_id == self.id):
-                    del value._sa_instance_state
-                    try:
-                        del self._sa_instance_state
-                    except Exception:
-                        pass
-                    cities.append(value)
-        return (cities)
+        res = []
+        # # Get all states.cities in the file storage.
+        # cities = storage.all(City)
+        # # for id, value in storage._FileStorage__objects.items():
+        # #     if (value.__class__ == City):
+        # #         if (value.state_id == self.id):
+        # #             del value._sa_instance_state
+        # #             try:
+        # #                 del self._sa_instance_state
+        # #             except Exception:
+        # #                 pass
+        # #             cities.append(value)
+        # for key, city in cities.items():
+        #     print(cities)
+        all_states = storage.all(State)
+        for key, state in all_states.items():
+            if state.id == self.id:
+                # print(self.id)
+                all_cities = storage.all(City)
+                for key, city in all_cities.items():
+                    if city.state_id == self.id:
+                        del city._sa_instance_state
+                        # print(city)
+                        res.append(city)
+        return (res)

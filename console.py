@@ -135,14 +135,34 @@ class HBNBCommand(cmd.Cmd):
         """ Create an object of any class"""
         # check for the database in use
         if (os.getenv("HBNB_TYPE_STORAGE", "FileStorage") != "db"):
-            line = args
-            if (self.check_class(line) is True):
-                line = line.split()
-                className = self.classes[line[0]]
-                instance = className()
-                instance.save()
-                print(instance.id)
-        else:
+            # line = args
+            # if (self.check_class(line) is True):
+            #     line = line.split()
+            #     className = self.classes[line[0]]
+            #     for arg in args[1:]:
+            #         if '=' in arg:
+            #             # return
+            #             new_arg = arg.split('=', 1)
+            #             if (not new_arg[1]):
+            #                 continue
+            #         # checks
+            #         new_arg[1] = new_arg[1].replace("_", " ")
+            #         new_arg[1] = new_arg[1].replace("'", '"')
+            #         new_arg[1] = new_arg[1].replace('"', "")
+            #         # try to convert the value to int or float
+            #         try:
+            #             new_arg[1] = int(new_arg[1])
+            #         except ValueError:
+            #             try:
+            #                 new_arg[1] = float(new_arg[1])
+            #             except ValueError:
+            #                 pass
+            #         kwagrs[new_arg[0]] = new_arg[1]
+            #     new_instance = HBNBCommand.classes[args[0]](**kwagrs)
+            #     print(new_instance)
+            #     instance = className()
+            #     instance.save()
+            #     print(instance.id)
             kwagrs = {}
             args = args.split()
             if not args[0]:
@@ -162,6 +182,44 @@ class HBNBCommand(cmd.Cmd):
                     new_arg[1] = new_arg[1].replace("_", " ")
                     new_arg[1] = new_arg[1].replace("'", '"')
                     new_arg[1] = new_arg[1].replace('"', "")
+                    print(new_arg[1])
+                    # try to convert the value to int or float
+                    try:
+                        new_arg[1] = int(new_arg[1])
+                    except ValueError:
+                        try:
+                            new_arg[1] = float(new_arg[1])
+                        except ValueError:
+                            pass
+                    kwagrs[new_arg[0]] = new_arg[1]
+                new_instance = HBNBCommand.classes[args[0]](**kwagrs)
+                print(new_instance)
+                new_instance.save()
+                print(new_instance.id)
+                return (new_instance.id)
+
+        else:
+            print("found1")
+            kwagrs = {}
+            args = args.split()
+            if not args[0]:
+                print("** class name missing **")
+                return
+            elif args[0] not in HBNBCommand.classes:
+                print("** class doesn't exist **")
+                return
+            else:
+                for arg in args[1:]:
+                    if '=' in arg:
+                        # return
+                        new_arg = arg.split('=', 1)
+                        if (not new_arg[1]):
+                            continue
+                    # checks
+                    new_arg[1] = new_arg[1].replace("_", " ")
+                    new_arg[1] = new_arg[1].replace("'", '"')
+                    new_arg[1] = new_arg[1].replace('"', "")
+                    print(new_arg[1])
                     # try to convert the value to int or float
                     try:
                         new_arg[1] = int(new_arg[1])
@@ -175,10 +233,12 @@ class HBNBCommand(cmd.Cmd):
                 try:
                     new_instance.save()
                     print(new_instance.id)
+                    return (new_instance.id)
                 except sqlalchemy.exc.IntegrityError as E:
                     # if any error was found adding data to the database
                     print(E)
                     pass
+        print("found3")
 
     def help_create(self):
         """ Help information for the create method """
@@ -273,7 +333,7 @@ class HBNBCommand(cmd.Cmd):
     def do_all(self, args):
         """ Shows all objects, or all objects of a class"""
         # used to prepare the database
-        # storage.reload()
+        storage.reload()
         print_list = []
         # check for the database in use
         if (os.getenv("HBNB_TYPE_STORAGE", "FileStorage") == "db"):
@@ -282,24 +342,47 @@ class HBNBCommand(cmd.Cmd):
                 if args not in HBNBCommand.classes:
                     print("** class doesn't exist **")
                     return
-                # quering DB via args
                 try:
-                    results = storage._DBStorage__session.query(
-                        self.classes[args]).all()
-                    for result in results:
-                        del result._sa_instance_state
-                        print_list.append(result)
+                    # quering DB via args
+                    if (args != 'BaseModel'):
+                        results = storage.all(self.classes[args])
+                        for key, result in results.items():
+                            del result._sa_instance_state
+                            print_list.append(result)
+                        # try:
+                            # results = storage._DBStorage__session.query(
+                            #     self.classes[args]).all()
+                            # for result in results:
+                            #     del result._sa_instance_state
+                            #     print_list.append(result)
                 except sqlalchemy.exc.InvalidRequestError:
                     pass
             else:
+                if args:
+                    args = args.split(' ')[0]  # remove possible trailing args
+                    if args not in HBNBCommand.classes:
+                        print("** class doesn't exist **")
+                        return
+                # quering DB via args
                 # print("select all from the database")
+                res = []
                 for key, value in self.classes.items():
                     try:
-                        results = storage._DBStorage__session.query(
-                            value).all()
-                        for result in results:
-                            del result._sa_instance_state
-                            print_list.append(result)
+                        if (key != 'BaseModel'):
+                            # print(self.classes[key])
+                            results = storage.all(self.classes[key])
+                            print(results)
+                            for key, result in results.items():
+                                del result._sa_instance_state
+                                print_list.append(result)
+                            # print(res)
+                        # results = storage._DBStorage__session.query(
+                        #     value).all()
+                        # if (key != 'BaseModel'):
+                        #     results = storage.all(self.classes[args])
+                        #     for result in results:
+                        #         del result._sa_instance_state
+                        #         print_list.append(result)
                     except sqlalchemy.exc.InvalidRequestError:
                         pass
         else:
