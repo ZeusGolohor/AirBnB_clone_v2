@@ -82,6 +82,30 @@ def states_list():
     return render_template('7-states_list.html', states=states)
 
 
+@app.route('/cities_by_states', strict_slashes=False)
+def cities_by_states():
+    """
+    A method t get all citites and thier state.
+    """
+    from models.city import City
+    from models.state import State
+
+    res = {}
+    states = storage.all(State)
+    for key, state in states.items():
+        new_state = {}
+        cities = {}
+        cities_req = storage.all(City)
+        for key1, city in cities_req.items():
+            if (city.state_id == state.id):
+                cities[key1] = city.to_dict()
+        for key, value in state.to_dict().items():
+            new_state[key] = value
+            new_state['cities'] = cities
+        res['State.{}'.format(state.id)] = new_state
+    return render_template('/8-cities_by_states.html', data=res)
+
+
 @app.teardown_appcontext
 def teardown_ses(self):
     """
